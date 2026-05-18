@@ -1,0 +1,186 @@
+# nav2_localization_params.yaml
+bt_navigator: # Nav2의 의사결정 흐름을 행동 트리(Behavior Tree) 로 관리
+  ros__parameters:
+    use_sim_time: true # Isaac Sim과 시간 동기화
+    default_bt_xml_filename: "navigate_w_replanning_and_recovery.xml" # 목표 이동 중 재계획 & 리커버리 동작 자동 수행
+
+planner_server: # 전역 경로 생성
+  ros__parameters:
+    use_sim_time: true
+    expected_planner_frequency: 5.0 # 최대 재계획 빈도 (초당 5회)
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: "nav2_navfn_planner/NavfnPlanner" # 플래너 (global_frame: map기준으로 전역 경로 계산)
+      tolerance: 0.5 # 목표점 근처 반경 0.5m 이내면 도달 처리
+
+controller_server: #계획된 경로를 속도 명령 변환 생성
+  ros__parameters:
+    use_sim_time: true
+    controller_frequency: 30.0 # 제어 루프 주기
+    min_x_velocity_threshold: 0.001
+    min_theta_velocity_threshold: 0.001
+
+    # Goal Checker 추가 (허용오차 완화)
+    goal_checker_plugins: ["general_goal_checker"]
+    general_goal_checker:
+      plugin: "nav2_controller::SimpleGoalChecker"
+      xy_goal_tolerance: 0.15      # 10cm가 너무 빡빡하면 0.2까지
+      yaw_goal_tolerance: 0.15     # 약 8.6도 (0.2~0.25까지도 테스트 OK) => 도착 판정 오차 파라미터
+      stateful: false
+
+    controller_plugins: ["FollowPath"]
+    FollowPath:
+      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController" # 컨트롤러
+
+      # 권장 속도 / 곡예에도 밀리지 않게 유지하되,
+      # 회전-정렬에 여유 주려면 너무 높지 않게 시작
+      desired_linear_vel: 1.2 # 직선 기본 속도
+      min_lookahead_dist: 0.4
+      max_lookahead_dist: 1.2
+      lookahead_dist: 0.8 # 경로를 얼마나 앞까지 보고 조향할지를 결정하는 값
+      use_velocity_scaled_lookahead_dist: false 
+
+      # '헤딩 맞추고 출발' 경제
+      use_rotate_to_heading: true # 출발 전 방향 정렬
+      rotate_to_heading_min_angle: 0.26    # 15도 이상 어긋나면 제자리 회전 / 재탐색 헤딩 각도
+      rotate_to_heading_angular_vel: 1.2   # 제자리 회전 속도 (rad/s)
+
+      # 후진 허용(진입각 확보용)
+      allow_reversing: true # 후진 허용
+
+      # 가속/감속 한계(제한) (너무 낮으면 안 됨) 
+      max_angular_accel: 2.0
+      max_linear_accel: 2.0
+
+      # 충돌/인플레이션 상황 맞게 처음엔 간단히: 장애물 밀집 시 자동 감속
+      use_collision_detection: true
+      regulate_max_linear_vel: true
+
+      # TF 여유 (TF 시간 지연을 허용하는 완충 값)
+      transform_tolerance: 0.2
+
+smoother_server: # 경로 곡선화(스무딩)
+  ros__parameters:
+    use_sim_time: true
+    smoother_plugins: ["SimpleSmoother"] # 전역 경로의 각진 모서리를 부드럽게 보정
+    SimpleSmoother:
+      plugin: "nav2_smoother::SimpleSmoother" # => Localization 환경에서 조향 안정성 향상 (급커브 → 완만하게)
+
+behavior_server: # 복구 동작 수행
+  ros__parameters:
+    use_sim_time: true
+    behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
+  spin: # 제자리 회전 후, 주변 환경 다시 스캔
+    plugin: "nav2_behaviors/Spin"
+  backup: # 좁은 공간/장애물을 마주했을 때 후진하여 탈출
+    plugin: "nav2_behaviors/BackUp"
+  drive_on_heading: # 특정 방향으로 직진하여 자세 정렬
+    plugin: "nav2_behaviors/DriveOnHeading"
+  assisted_teleop: # 수동 조작으로 위치/자세 보정 가능
+    plugin: "nav2_behaviors/AssistedTeleop"
+  wait: # 정지 상태 유지하여 센서/경로 상태 안정화
+    plugin: "nav2_behaviors/Wait"
+
+global_costmap: # 전역 비용맵 (전역 경로용)
+  global_costmap:
+    ros__parameters:
+      use_sim_time: true
+      global_frame: map # 고정 지도를 활용해 전역 경로 계획
+      robot_base_frame: body # body를 기본 링크와 매칭
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      resolution: 0.05
+      track_unknown_space: true
+      robot_radius: 0.20
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer: # 저장맵 사용 
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: true
+      obstacle_layer: # 실시간 장애물 반영
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        observation_sources: scan
+        scan:
+          topic: /scan
+          data_type: "LaserScan"
+          marking: true
+          clearing: true
+          max_obstacle_height: 2.0
+      inflation_layer: # 완충 반경 0.6m
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 0.6
+
+local_costmap: # 지역 비용 맵 (즉시 회피/ 미세조향)
+  local_costmap:
+    ros__parameters:
+      use_sim_time: true
+      global_frame: odom # 주변 6*6 m 탐색
+      robot_base_frame: body # body를 기본 링크와 매칭
+      update_frequency: 10.0
+      publish_frequency: 5.0
+      rolling_window: true
+      width: 6
+      height: 6
+      resolution: 0.05
+      robot_radius: 0.20
+      plugins: ["obstacle_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        observation_sources: scan
+        scan:
+          topic: /scan
+          data_type: "LaserScan"
+          marking: true
+          clearing: true
+          max_obstacle_height: 2.0
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 0.6
+
+velocity_smoother: # 속도 명령 안정화(진동/ 튀는 명령 완충)
+  ros__parameters:
+    use_sim_time: true
+    smoothing_frequency: 20.0 # 속도 신호를 일정 중기로 부드럽게 보정
+    scale_velocities: true
+    # [vx, vy, wz]
+    max_velocity: [2.0, 0.0, 1.0] # 가감속 상한 설정
+    min_velocity: [0.0, 0.0, 0.0]   # -> 컨트롤러가 순간적으로 큰 명령을 내도 바퀴로 가는 명령은 완만하게 전달
+    accel_limit: [2.5, 0.0, 3.2]
+    decel_limit: [-2.5, 0.0, -3.2]
+    odom_topic: odom
+    feedback: "OPEN_LOOP" # or "CLOSED_LOOP"
+
+amcl: # (Adaptive Monte Carlo Localization) : 지도 위 현재 위치 추정 (확률 기반 Localization)
+  ros__parameters:
+    use_sim_time: true
+    # 프레임/토픽 (나의 환경과 일치)/ LiDAR 관측기준 명확히 고정
+    base_frame_id: body
+    odom_frame_id: odom
+    global_frame_id: map
+    scan_topic: scan
+
+    # TF 브로드캐스트 # map -> odom 변환 안정화
+    tf_broadcast: true
+    transform_tolerance: 0.2
+
+    # 입자/업데이트 (리소스 조정) 
+    min_particles: 500
+    max_particles: 2000 # -> 위치 가설 폭 & 연산량 균형
+    update_min_d: 0.05
+    update_min_a: 0.05 # -> 최소 이동이 있을 때만 관측 업데이트
+    resample_interval: 1
+
+    # 레이저 모델
+    laser_model_type: "likelihood_field" # 스캔과 지도 벽 형상 일치도를 기반으로 점수화
+    z_hit: 0.95
+    z_rand: 0.05 # -> 레이저가 실제 벽에 맞을 확률이 높고, 일부는 랜덤 잡음일 수 있다는 가중치 가정
+    sigma_hit: 0.2
+    laser_likelihood_max_dist: 2.0 # ->  "센서가 벽에 진짜 맞았는가?"의 민감도 조절
+
+    # 초기 자세 설정을 수동할 때의 사용 (보통 RViz에서 2D Pose Estimate로 설정)
+    set_initial_pose: false # -> 초기 위치는 RViz 2D Pose Estimate로 지정
+    always_reset_initial_pose: false
+
+map_server: # 고정지도(/map) 퍼블리시
+  ros__parameters:
+    use_sim_time: true
+    yaml_filename: "map.yaml" # 저장된 맵 정보 불러오기 (단, launch 인자로 map:=... 이 들어오면 그 값이 우선 적용 )
