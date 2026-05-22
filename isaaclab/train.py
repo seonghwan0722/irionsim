@@ -94,7 +94,6 @@ dump_pickle(os.path.join(log_dir, "params", "agent.pkl"), agent_cfg)
 runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
 # 호출 시 설정된 반복(max_iterations) 횟수만큼 데이터 수집 ↔ 정책 업데이트(Policy Update) 루프를 반복
 	# 정책 네트워크 파라미터가 점점 개선되고, 콘솔/텐서보드 로그에 성능 곡선, 보상, 손실 값이 기록됨
-
 # close the simulator
 env.close()
 # 시뮬레이터 프로세스 종료, GPU·메모리 리소스 정리

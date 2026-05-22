@@ -1,0 +1,36 @@
+# default.yaml
+# ATS (Autonomous Transportation System) Configuration
+
+sim:
+  headless: false
+  load_extensions: true
+
+player:
+  fixed_time_step: true
+  play_every_frame: false
+  target_hz: 5
+
+assets:
+  usd_path: "/home/korea/isaacsim/ATS_Enviroment/Spot_Ats2_with_Environment.usd"
+  spot_prim: "/World/Spot"
+  ats_prim: "/World/ATS"
+  imu_prim: "/World/Spot/imu_link"
+
+ros:
+  use_sim_time: true
+  dom_topic: "/odom"
+  scan_topic: "/scan"
+  point_cloud_topic: "/point_cloud"
+  camera_topic: "/camera/image_raw"
+
+policy:
+  path: "/home/korea/isaacsim/ATS_Enviroment/spot_policy.pt"
+  device: "auto"
+
+controls:
+  spot_action_scale: 0.2
+  ats_joint_step: 0.1
+  teleop:
+    lin_speed: 1.0
+    ang_speed_yaw: 1.0
+    ang_speed_pitch: 1.0
