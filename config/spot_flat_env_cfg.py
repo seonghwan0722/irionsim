@@ -150,11 +150,11 @@ def __post_init__(self):
     )
     class SpotFlatEnvCfg_PLAY(SpotFlatEnvCfg):
     # 학습이 완료된 모델을 실제로 구동하거나 테스트할 때 사용하는 설정 클래스
-    def __post_init__(self) -> None:
-        ...
-        # 병렬 환경 수를 50개로 제한 (데모 및 시각화용) 학습 시 보다 적은 수의 환경만 가볍게 띄워 시각화나 데모에 집중
-        self.scene.num_envs = 50
-        
-        # 센서 잡음(Noise) 비활성화 (적용 여부 설정) => 실행 단계에서는 의도적인 잡음을 제거하여 모델의 순수한 추론 결과를 확인하기 위해 False로 설정
-        self.observations.policy.enable_corruption = False
+        def __post_init__(self) -> None:
+            ...
+            # 병렬 환경 수를 50개로 제한 (데모 및 시각화용) 학습 시 보다 적은 수의 환경만 가볍게 띄워 시각화나 데모에 집중
+            self.scene.num_envs = 50
+            
+            # 센서 잡음(Noise) 비활성화 (적용 여부 설정) => 실행 단계에서는 의도적인 잡음을 제거하여 모델의 순수한 추론 결과를 확인하기 위해 False로 설정
+            self.observations.policy.enable_corruption = False
     

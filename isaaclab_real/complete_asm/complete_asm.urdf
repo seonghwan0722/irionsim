@@ -114,22 +114,22 @@
             </geometry>
         </collision>
     </link>
-    <link name="TOP_ARM_LINK미러">
+    <link name="TOP_ARM_LINK_MIR">
         <inertial>
             <origin xyz="-0.03238526932608899 -0.01149964675436877 0.14093641386154013" rpy="0.0 -0.0 0.0" />
             <mass value="0.1912083481787344" />
             <inertia ixx="0.0001958985995300245" iyy="0.0010229852746595786" izz="0.0010352720955113855" ixy="-8.400436387674855e-05" iyz="2.0535171259301912e-05" ixz="-6.558845963348868e-05" />
         </inertial>
-        <visual name="TOP_ARM_LINK미러_visual">
+        <visual name="TOP_ARM_LINK_MIR_visual">
             <origin xyz="-0.22570419000000003 -0.11938531 -0.051427827378300074" rpy="1.5707963267948966 -0.0 0.0" />
             <geometry>
-                <mesh filename="meshes/TOP_ARM_LINK미러.stl" scale="0.001 0.001 0.001" />
+                <mesh filename="meshes/TOP_ARM_LINK_MIR.stl" scale="0.001 0.001 0.001" />
             </geometry>
         </visual>
-        <collision name="TOP_ARM_LINK미러_collision">
+        <collision name="TOP_ARM_LINK_MIR_collision">
             <origin xyz="-0.22570419000000003 -0.11938531 -0.051427827378300074" rpy="1.5707963267948966 -0.0 0.0" />
             <geometry>
-                <mesh filename="meshes/TOP_ARM_LINK미러.stl" scale="0.001 0.001 0.001" />
+                <mesh filename="meshes/TOP_ARM_LINK_MIR.stl" scale="0.001 0.001 0.001" />
             </geometry>
         </collision>
     </link>
@@ -285,22 +285,22 @@
             </geometry>
         </collision>
     </link>
-    <link name="LOWER_ARM_LINK미러">
+    <link name="LOWER_ARM_LINK_MIR">
         <inertial>
             <origin xyz="-0.0002667807203070982 0.0065766179766340565 0.013926695707037511" rpy="0.0 -0.0 0.0" />
             <mass value="0.07644747488590391" />
             <inertia ixx="1.518872835580846e-05" iyy="0.00016083509215597855" izz="0.00016580110174899642" ixy="-5.917637974289475e-06" iyz="-3.9976000476042646e-07" ixz="1.6058426582888585e-08" />
         </inertial>
-        <visual name="LOWER_ARM_LINK미러_visual">
+        <visual name="LOWER_ARM_LINK_MIR_visual">
             <origin xyz="-0.0776846 -0.07551962000000001 -0.20200044737830006" rpy="1.5707963267948966 -0.0 0.0" />
             <geometry>
-                <mesh filename="meshes/LOWER_ARM_LINK미러.stl" scale="0.001 0.001 0.001" />
+                <mesh filename="meshes/LOWER_ARM_LINK_MIR.stl" scale="0.001 0.001 0.001" />
             </geometry>
         </visual>
-        <collision name="LOWER_ARM_LINK미러_collision">
+        <collision name="LOWER_ARM_LINK_MIR_collision">
             <origin xyz="-0.0776846 -0.07551962000000001 -0.20200044737830006" rpy="1.5707963267948966 -0.0 0.0" />
             <geometry>
-                <mesh filename="meshes/LOWER_ARM_LINK미러.stl" scale="0.001 0.001 0.001" />
+                <mesh filename="meshes/LOWER_ARM_LINK_MIR.stl" scale="0.001 0.001 0.001" />
             </geometry>
         </collision>
     </link>
@@ -342,103 +342,103 @@
             </geometry>
         </collision>
     </link>
-    <joint name="wheel_leg_link_회전-1" type="continuous">
+    <joint name="wheel_leg_link_rev-1" type="continuous">
         <origin xyz="-0.00015771000000000868 -0.005247629999999996 0.0808032" rpy="-1.5707963267948966 -0.0 3.1115479793871788" />
         <parent link="wheel_leg_link" />
         <child link="wheel_link" />
         <axis xyz="-1.634341986883614e-07 0.0 1.000000302500441" />
     </joint>
-    <joint name="wheel_leg_link_회전-2" type="continuous">
+    <joint name="wheel_leg_link_rev-2" type="continuous">
         <origin xyz="-0.1661501764032297 0.01249438 0.08589107206261985" rpy="-1.5695778086865493 -0.0405224664905253 -0.0300693662642092" />
         <parent link="wheel_leg_link" />
         <child link="wheel_link" />
         <axis xyz="-2.5152151516851656e-05 -0.001218 0.999999551496584" />
     </joint>
-    <joint name="wheel_leg_link_회전-3" type="continuous">
+    <joint name="wheel_leg_link_rev-3" type="continuous">
         <origin xyz="-0.32562453372237926 0.012494359999999998 0.07293224139610428" rpy="-1.5695778086865493 -0.0405224664905253 -0.0300693662642092" />
         <parent link="wheel_leg_link" />
         <child link="wheel_link" />
         <axis xyz="-2.5152151516851656e-05 -0.001218 0.999999551496584" />
     </joint>
-    <joint name="wheel_leg_link_회전-4" type="continuous">
+    <joint name="wheel_leg_link_rev-4" type="continuous">
         <origin xyz="-0.0003754999999999953 0.23150607 0.0808032" rpy="-1.5707963267948966 -0.0 3.1115479793871788" />
         <parent link="wheel_leg_link" />
         <child link="wheel_link" />
         <axis xyz="-1.634341986883614e-07 0.0 1.000000302500441" />
     </joint>
-    <joint name="wheel_leg_link_회전-5" type="continuous">
+    <joint name="wheel_leg_link_rev-5" type="continuous">
         <origin xyz="-0.1586477691654984 -0.23150607 0.09906585041123527" rpy="-1.572014844903244 0.04052246649052531 -0.030069366264209203" />
         <parent link="wheel_leg_link" />
         <child link="wheel_link" />
         <axis xyz="-2.5152151516851656e-05 -0.001218 0.999999551496584" />
     </joint>
-    <joint name="wheel_leg_link_회전-6" type="continuous">
+    <joint name="wheel_leg_link_rev-6" type="continuous">
         <origin xyz="-0.31864777521112064 -0.23150607 0.09906585764015598" rpy="-1.572014844903244 0.04052246649052531 -0.030069366264209203" />
         <parent link="wheel_leg_link" />
         <child link="wheel_link" />
         <axis xyz="-2.5152151516851656e-05 -0.001218 0.999999551496584" />
     </joint>
-    <joint name="TOP_ARM_LINK_회전-7" type="continuous">
+    <joint name="TOP_ARM_LINK_rev-7" type="continuous">
         <origin xyz="0.09429581 0.03938530999999999 0.16457262" rpy="-1.5707963267948966 -0.0 0.0" />
         <parent link="TOP_ARM_LINK" />
         <child link="wheel_leg_link" />
         <axis xyz="0.0 0.0 1.0" />
     </joint>
-    <joint name="LOWER_ARM_LINK_회전-8" type="continuous">
+    <joint name="LOWER_ARM_LINK_rev-8" type="continuous">
         <origin xyz="0.07940738000000001 -0.016231690000000007 0.014000000000000021" rpy="1.5707963267948966 -0.0 3.1010518807301253" />
         <parent link="LOWER_ARM_LINK" />
         <child link="wheel_leg_link" />
         <axis xyz="-3.447097470174465e-07 0.0 0.999999678291889" />
     </joint>
-    <joint name="LOWER_ARM_LINK_회전-9" type="continuous">
+    <joint name="LOWER_ARM_LINK_rev-9" type="continuous">
         <origin xyz="-0.08046116 -0.009746950000000006 0.014000000000000021" rpy="1.5707963267948966 -0.0 3.1010518807301253" />
         <parent link="LOWER_ARM_LINK" />
         <child link="wheel_leg_link" />
         <axis xyz="-3.447097470174465e-07 0.0 0.999999678291889" />
     </joint>
-    <joint name="TOP_ARM_LINK미러_회전-10" type="continuous">
+    <joint name="TOP_ARM_LINK_MIR_rev-10" type="continuous">
         <origin xyz="0.09429581 -0.03938530999999999 0.16457262" rpy="1.5707963267948966 -0.0 0.0" />
-        <parent link="TOP_ARM_LINK미러" />
+        <parent link="TOP_ARM_LINK_MIR" />
         <child link="wheel_leg_link" />
         <axis xyz="0.0 0.0 -0.9999999999999999" />
     </joint>
-    <joint name="LOWER_ARM_LINK미러_회전-11" type="continuous">
+    <joint name="LOWER_ARM_LINK_MIR_rev-11" type="continuous">
         <origin xyz="0.07940738 0.01623169 0.013999999999999999" rpy="-1.5707963267948966 -0.0 3.1010518807301253" />
-        <parent link="LOWER_ARM_LINK미러" />
+        <parent link="LOWER_ARM_LINK_MIR" />
         <child link="wheel_leg_link" />
         <axis xyz="0.08099305115897235 0.0 -0.9967143433541829" />
     </joint>
-    <joint name="LOWER_ARM_LINK미러_회전-13" type="continuous">
+    <joint name="LOWER_ARM_LINK_MIR_rev-13" type="continuous">
         <origin xyz="-0.08046116000000002 0.009746949999999997 0.013999999999999999" rpy="-1.5707963267948966 -0.0 3.1010518807301253" />
-        <parent link="LOWER_ARM_LINK미러" />
+        <parent link="LOWER_ARM_LINK_MIR" />
         <child link="wheel_leg_link" />
         <axis xyz="0.08099305115897235 0.0 -0.9967143433541829" />
     </joint>
-    <joint name="TOP_ARM_LINK미러_회전-14" type="continuous">
+    <joint name="TOP_ARM_LINK_MIR_rev-14" type="continuous">
         <origin xyz="-0.14801959 -0.04386569 0.15057262" rpy="0.0 -0.0 0.0" />
-        <parent link="TOP_ARM_LINK미러" />
-        <child link="LOWER_ARM_LINK미러" />
+        <parent link="TOP_ARM_LINK_MIR" />
+        <child link="LOWER_ARM_LINK_MIR" />
         <axis xyz="0.0 0.0 -1.0" />
     </joint>
-    <joint name="TOP_ARM_LINK_회전-15" type="continuous">
+    <joint name="TOP_ARM_LINK_rev-15" type="continuous">
         <origin xyz="-0.14801959 0.04386569 0.15057262" rpy="0.0 -0.0 0.0" />
         <parent link="TOP_ARM_LINK" />
         <child link="LOWER_ARM_LINK" />
         <axis xyz="0.0 0.0 1.0" />
     </joint>
-    <joint name="TOP_ARM_LINK미러_회전-16" type="continuous">
+    <joint name="TOP_ARM_LINK_MIR_rev-16" type="continuous">
         <origin xyz="0.0 0.0 0.08514479" rpy="3.141592653589793 -0.0 0.0" />
-        <parent link="TOP_ARM_LINK미러" />
+        <parent link="TOP_ARM_LINK_MIR" />
         <child link="TOP_ARM_LINK" />
         <axis xyz="0.0 0.0 -1.0" />
     </joint>
-    <joint name="TOP_ARM_LINK_회전-17" type="continuous">
+    <joint name="TOP_ARM_LINK_rev-17" type="continuous">
         <origin xyz="0.0 0.0 0.08514479" rpy="3.141592653589793 -0.0 0.0" />
         <parent link="TOP_ARM_LINK" />
-        <child link="TOP_ARM_LINK미러" />
+        <child link="TOP_ARM_LINK_MIR" />
         <axis xyz="0.0 0.0 1.0" />
     </joint>
-    <joint name="BODY_LINK_회전-18" type="revolute">
+    <joint name="BODY_LINK_rev-18" type="revolute">
         <origin xyz="0.25122109 0.0941 0.11559530000000001" rpy="3.141592653589793 1.42882689753879 3.141592653589793" />
         <parent link="BODY_LINK" />
         <child link="LARGE_BEVEL_GEAR_LINK" />
