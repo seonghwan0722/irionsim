@@ -1,0 +1,147 @@
+# irion/default.yaml
+# IRION (Integrated Robot Isaac-sim Operation Network) Configuration
+# Sony IMX477, RPLIDAR A3, FLIR Lepton 3.5, MPU9250, TI IWR6843AOP 사양 반영
+
+# ==========================================
+# 1. 시뮬레이션 기본 설정
+# ==========================================
+sim:
+  headless: false
+  load_extensions: true
+
+# ==========================================
+# 2. 실행 환경 및 시간 설정
+# ==========================================
+player:
+  fixed_time_step: true
+  play_every_frame: false
+  target_hz: 30
+
+# ==========================================
+# 3. 에셋 및 프림 경로 (USD 내 경로)
+# ==========================================
+assets:
+  usd_path: "/home/korea/isaacsim/ATS_Enviroment/Spot_Ats2_with_Environment.usd"
+  spot_prim: "/World/Spot"
+  body_prim: "/World/Spot/base_link"
+  ats_prim: "/World/ATS"
+  camera_base_prim: "/World/Spot/ATS/ATS/link2"
+  camera_prim: "/World/Spot/ATS/ATS/link2/Xform/Camera"
+  imu_prim: "/World/Spot/imu_link"
+  lidar_prim: "/World/Spot/Lidar"
+  radar_prim: "/World/Spot/Radar"
+
+# ==========================================
+# 4. 센서 상세 속성 설정
+# ==========================================
+sensors:
+  # --- RGB 카메라 설정 (Sony IMX477 사양 반영) ---
+  camera:
+    enabled: true
+    width: 4056
+    height: 3040
+    frame_id: "camera_frame"
+    focal_length: 6.0
+    horizontal_aperture: 6.287
+    vertical_aperture: 4.712
+    clipping_range: [0.01, 10000.0]
+    projection: "perspective"
+    specs:
+      sensor_model: "Sony IMX477"
+      pixel_size_um: 1.55
+
+  # --- LiDAR 설정 (RPLIDAR A3 사양 반영) ---
+  lidar:
+    enabled: true
+    create_2d: true
+    create_3d: true
+    prim_path: "/World/Spot/Lidar"
+    config: "Example_Rotary"
+    rotation_frequency: 15.0
+    resolution:
+      azimuth: 0.225
+    range: [0.2, 25.0]
+    frame_id: "base_scan"
+
+  # --- IMU 설정 (MPU9250 사양 반영) ---
+  imu:
+    enabled: true
+    frame_id: "imu_link"
+    publish_orientation: true
+    publish_angular_velocity: true
+    publish_linear_acceleration: true
+    noise:
+      accel_std: 0.0078
+      gyro_std: 0.00017
+      accel_bias: 0.0001
+      gyro_bias: 0.00005
+    specs:
+      model: "MPU9250"
+
+  # --- 열화상 카메라 설정 (FLIR Lepton 3.5 사양 반영 - 주석 유지) ---
+  # thermal_camera:
+  #   enabled: false
+  #   prim_path: "/World/Spot/ATS/ATS/link2/Xform/ThermalCamera"
+  #   width: 160
+  #   height: 120
+  #   frame_id: "thermal_frame"
+  #   horizontal_fov: 57.0
+  #   frame_rate: 8.7
+  #   min_temp: -10.0
+  #   max_temp: 450.0
+
+  # --- Radar 설정 (TI IWR6843AOP mmWave 사양 반영) ---
+  radar:
+    enabled: true
+    prim_path: "/World/Spot/Radar"
+    config: "Example"
+    
+    # [TI IWR6843AOP AoP 기술 사양]
+    width: 512              # 스캔 해상도
+    height: 512
+    fov: [120.0, 120.0]     # Antenna-on-Package: 수평 120도, 수직 120도 광시야각
+    range: [0.1, 30.0]      # 탐지 거리: Max ~30m (환경 설정에 따라 가변)
+    
+    specs:
+      model: "TI IWR6843AOP"
+      frequency_ghz: "60-64" # 60GHz 대역 mmWave
+      antenna_type: "AoP (Antenna on Package)"
+      range_resolution_cm: 3.75 # 4GHz 대역폭 기준 거리 분해능
+      angular_resolution_deg: 29.0 # 기본 각도 분해능
+
+# ==========================================
+# 5. ROS2 통신 토픽 및 프레임 설정
+# ==========================================
+ros:
+  use_sim_time: true
+  domain_id: 0
+  topics:
+    odom: "/odom"
+    scan: "/scan"
+    point_cloud: "/point_cloud"
+    imu: "/imu"
+    camera_rgb: "/yolo/image_raw"
+    camera_info: "/camera_info"
+    radar: "/radar/points"
+  frames:
+    odom_frame: "odom"
+    base_frame: "base_link"
+    imu_frame: "imu_link"
+    base_scan: "base_scan"
+    camera_frame: "camera_frame"
+    radar_frame: "radar_link"
+
+# ==========================================
+# 6. 제어 및 정책 설정
+# ==========================================
+policy:
+  path: "/home/korea/isaacsim/ATS_Enviroment/spot_policy.pt"
+  device: "auto"
+
+controls:
+  spot_action_scale: 0.2
+  ats_joint_step: 0.1
+  teleop:
+    lin_speed: 1.0
+    ang_speed_yaw: 1.0
+    ang_speed_pitch: 1.0
